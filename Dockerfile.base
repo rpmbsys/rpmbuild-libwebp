@@ -1,0 +1,17 @@
+ARG centos=7
+FROM aursu/rpmbuild:${centos}-build
+
+USER root
+RUN yum -y install \
+        freeglut-devel \
+        giflib-devel \
+        java-devel \
+        jpackage-utils \
+        libjpeg-devel \
+        libpng-devel \
+        libtiff-devel \
+        swig \
+    && yum clean all && rm -rf /var/cache/yum
+
+# RUN yum -y --enablerepo=bintray-custom install \
+#    && yum clean all && rm -rf /var/cache/yum
