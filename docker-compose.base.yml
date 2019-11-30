@@ -1,14 +1,7 @@
 version: "3.4"
 services:
-  centos7libwebpbase:
-    build:
-      context: .
-      dockerfile: Dockerfile.base
-    image: aursu/libwebpbuild:7-base
   centos8libwebpbase:
     build:
       context: .
-      args:
-        centos: 8
       dockerfile: Dockerfile.base
     image: aursu/libwebpbuild:8-base

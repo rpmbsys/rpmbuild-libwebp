@@ -1,11 +1,5 @@
 version: "3.4"
 services:
-  centos7libwebpbuild:
-    volumes:
-      - rpms:/home/centos/rpmbuild/SRPMS
-      - rpm7:/home/centos/rpmbuild/RPMS
-    build:
-      context: .
   centos8libwebpbuild:
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
@@ -18,7 +12,5 @@ services:
 volumes:
   rpms:
     name: rpms
-  rpm7:
-    name: rpm7
   rpm8:
     name: rpm8

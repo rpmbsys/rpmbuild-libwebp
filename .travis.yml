@@ -10,16 +10,10 @@ addons:
 
 env:
   global:
-    - DOCKER_COMPOSE_VERSION=1.24.1
     - PACKAGE_VCS_URL=https://github.com/aursu/rpmbuild-php-7.3
     - BINTRAY_REPO=custom
   jobs:
-    - BASE=centos7libwebpbase BUILD=centos7libwebpbuild UPLOADER=centos7bintray
     - BASE=centos8libwebpbase BUILD=centos8libwebpbuild UPLOADER=centos8bintray
-
-before_install:
-  - sudo curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-  - sudo chmod +x /usr/local/bin/docker-compose
 
 install:
   - docker-compose -f docker-compose.base.yml build --no-cache --pull ${BASE}

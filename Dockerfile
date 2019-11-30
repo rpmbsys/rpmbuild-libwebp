@@ -1,4 +1,4 @@
-ARG centos=7
+ARG centos=8
 FROM aursu/libwebpbuild:${centos}-base
 
 COPY SOURCES ${BUILD_TOPDIR}/SOURCES
