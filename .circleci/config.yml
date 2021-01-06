@@ -1,36 +1,19 @@
-version: 2
-jobs:
-  build:
-    machine:
-      image: ubuntu-1604:201903-01
-    environment:
-      BINTRAY_REPO: custom
-      PACKAGE_VCS_URL: https://github.com/aursu/rpmbuild-libwebp
-    steps:
-      - checkout
-      - run:
-          name: Git submodules sync
-          command: |
-            git submodule sync
-            git submodule update --init
-      - run:
-          name: Pull images for RPM build docker services
-          command: |
-            docker-compose -f rpmbuild/docker-compose.yml pull
-            docker-compose -f rpmbuild/docker-compose.bintray.yml pull
-      - run:
-          name: Build Docker images for RPM build
-          command: |
-            docker-compose -f docker-compose.base.yml build --pull
-            docker-compose build --no-cache
-      - run:
-          name: Build RPM packages
-          command: docker-compose up
-      - run:
-          name: Upload RPM packages into Bintray
-          command: |
-            docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm \
-              -e BINTRAY_USER=$BINTRAY_USER \
-              -e BINTRAY_API_KEY=$BINTRAY_API_KEY \
-              -e BINTRAY_REPO=$BINTRAY_REPO \
-              -e PACKAGE_VCS_URL=$PACKAGE_VCS_URL centos8bintray
+version: 2.1
+
+orbs:
+  docker-rpmbuild: aursu/rpmbuild@1.1.5
+
+parameters:
+  package-vcs-url:
+    description: Package VCS URL for BinTray
+    type: string
+    default: https://github.com/aursu/rpmbuild-libwebp
+
+workflows:
+  libwebpbuild:
+    jobs:
+      - docker-rpmbuild/rpmbuild:
+          name: centos8libwebpbuild
+          base_service: centos8libwebpbase
+          build_service: centos8libwebpbuild
+          bintray_uploader: centos8bintray
