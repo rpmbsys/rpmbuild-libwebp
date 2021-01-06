@@ -4,4 +4,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.base
-    image: aursu/libwebpbuild:8-base
+      args:
+        centos: $OS8
+    image: "aursu/libwebpbuild:${OS8}-base"

@@ -1,4 +1,4 @@
-ARG centos=8
+ARG centos=8.3.2011
 FROM aursu/libwebpbuild:${centos}-base
 
 COPY SOURCES ${BUILD_TOPDIR}/SOURCES

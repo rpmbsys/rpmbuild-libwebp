@@ -10,8 +10,10 @@ addons:
 
 env:
   global:
-    - PACKAGE_VCS_URL=https://github.com/aursu/rpmbuild-php-7.3
+    - PACKAGE_VCS_URL=https://github.com/aursu/rpmbuild-libwebp
     - BINTRAY_REPO=custom
+    - OS8=8.3.2011
+    - OS8TAG=8.3.2011
   jobs:
     - BASE=centos8libwebpbase BUILD=centos8libwebpbuild UPLOADER=centos8bintray
 
@@ -22,7 +24,7 @@ before_script:
   - docker-compose build --no-cache ${BUILD}
 
 script:
-  - docker-compose up ${BUILD}
+  - docker-compose up --exit-code-from ${BUILD} ${BUILD}
 
 before_deploy:
   - docker-compose -f rpmbuild/docker-compose.bintray.yml pull ${UPLOADER}

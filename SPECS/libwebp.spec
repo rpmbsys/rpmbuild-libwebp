@@ -1,14 +1,15 @@
 %global _hardened_build 1
 
 Name:          libwebp
-Version:       1.0.3
-Release:       1%{?dist}
+Version:       1.1.0
+Release:       3%{?dist}
 URL:           http://webmproject.org/
 Summary:       Library and tools for the WebP graphics format
 # Additional IPR is licensed as well. See PATENTS file for details
 License:       BSD
 Source0:       http://downloads.webmproject.org/releases/webp/%{name}-%{version}.tar.gz
 Source1:       libwebp_jni_example.java
+Patch0:        libwebp-freeglut.patch
 
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
@@ -76,6 +77,7 @@ export CFLAGS="%{optflags} -frename-registers"
            --enable-libwebpdemux --enable-libwebpdecoder \
            --disable-neon
 %make_build V=1
+make -C examples vwebp
 
 # swig generated Java bindings
 cp %{SOURCE1} .
@@ -140,6 +142,12 @@ cp swig/*.jar swig/*.so %{buildroot}/%{_libdir}/%{name}-java/
 
 
 %changelog
+* Mon May 18 2020 Sandro Mani <manisandro@gmail.com> - 1.1.0-3
+- Don't manually and incorrectly install vwebp, Makefile already does it correctly (#1836640)
+
+* Tue Jan 07 2020 Sandro Mani <manisandro@gmail.com> - 1.1.0-1
+- Update to 1.1.0
+
 * Mon Jul 15 2019 Sandro Mani <manisandro@gmail.com> - 1.0.3-1
 - Update to 1.0.3
 

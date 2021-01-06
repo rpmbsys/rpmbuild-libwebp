@@ -5,9 +5,9 @@ services:
       - rpms:/home/centos/rpmbuild/SRPMS
       - rpm8:/home/centos/rpmbuild/RPMS
     build:
-      args:
-        centos: 8
       context: .
+      args:
+        centos: $OS8
 
 volumes:
   rpms:
