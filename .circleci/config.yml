@@ -1,19 +1,15 @@
 version: 2.1
 
 orbs:
-  docker-rpmbuild: aursu/rpmbuild@1.1.5
-
-parameters:
-  package-vcs-url:
-    description: Package VCS URL for BinTray
-    type: string
-    default: https://github.com/aursu/rpmbuild-libwebp
+  docker-rpmbuild: aursu/rpmbuild@1.1.6
 
 workflows:
   libwebpbuild:
     jobs:
       - docker-rpmbuild/rpmbuild:
+          package-vcs-url: https://github.com/aursu/rpmbuild-libwebp
           name: centos8libwebpbuild
           base_service: centos8libwebpbase
           build_service: centos8libwebpbuild
           bintray_uploader: centos8bintray
+          bintray-repo: custom
