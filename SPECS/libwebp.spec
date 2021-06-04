@@ -1,5 +1,8 @@
 %global _hardened_build 1
 
+%define _debugsource_template %{nil}
+%define debug_package %{nil}
+
 Name:          libwebp
 Version:       1.2.0
 Release:       1%{?dist}
