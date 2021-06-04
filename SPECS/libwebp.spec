@@ -1,8 +1,8 @@
 %global _hardened_build 1
 
 Name:          libwebp
-Version:       1.1.0
-Release:       3%{?dist}
+Version:       1.2.0
+Release:       1%{?dist}
 URL:           http://webmproject.org/
 Summary:       Library and tools for the WebP graphics format
 # Additional IPR is licensed as well. See PATENTS file for details
@@ -142,6 +142,9 @@ cp swig/*.jar swig/*.so %{buildroot}/%{_libdir}/%{name}-java/
 
 
 %changelog
+* Mon Feb 01 2021 Sandro Mani <manisandro@gmail.com> - 1.2.0-1
+- Update to 1.2.0
+
 * Mon May 18 2020 Sandro Mani <manisandro@gmail.com> - 1.1.0-3
 - Don't manually and incorrectly install vwebp, Makefile already does it correctly (#1836640)
 

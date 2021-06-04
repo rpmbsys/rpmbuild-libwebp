@@ -1,15 +1,19 @@
 version: 2.1
 
 orbs:
-  docker-rpmbuild: aursu/rpmbuild@1.1.6
+  docker-rpmbuild: aursu/rpmbuild@1.1.7
+
+parameters:
+  artifactory-url:
+    description: Artifactory URL
+    type: string
+    default: https://rpmb.jfrog.io
 
 workflows:
   libwebpbuild:
     jobs:
-      - docker-rpmbuild/rpmbuild:
-          package-vcs-url: https://github.com/aursu/rpmbuild-libwebp
-          name: centos8libwebpbuild
-          base_service: centos8libwebpbase
-          build_service: centos8libwebpbuild
+      - docker-rpmbuild/build:
+          name: centos8build
+          build_service: centos8build
           bintray_uploader: centos8bintray
           bintray-repo: custom

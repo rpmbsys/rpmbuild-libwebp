@@ -1,9 +1,0 @@
-version: "3.4"
-services:
-  centos8libwebpbase:
-    build:
-      context: .
-      dockerfile: Dockerfile.base
-      args:
-        centos: $OS8
-    image: "aursu/libwebpbuild:${OS8}-base"
