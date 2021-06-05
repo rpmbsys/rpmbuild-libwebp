@@ -12,9 +12,12 @@ env:
   global:
     - ARTIFACTORY_URL=https://rpmb.jfrog.io
     - BINTRAY_REPO=custom
+    - OS7=7.9.2009
+    - OS7TAG=7.9.2009
     - OS8=8.3.2011
     - OS8TAG=8.3.2011
   jobs:
+    - BUILD=centos7build UPLOADER=centos7bintray
     - BUILD=centos8build UPLOADER=centos8bintray
 
 before_script:

@@ -20,6 +20,10 @@ jobs:
             repo: custom
             build: centos8build
             uploader: centos8bintray
+          - compose-file: docker-compose.yml
+            repo: custom
+            build: centos7build
+            uploader: centos7bintray
     env:
       BUILD_COMPOSE_FILE: ${{ matrix.compose-file }}
       BINTRAY_REPO: ${{ matrix.repo }}

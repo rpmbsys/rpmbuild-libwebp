@@ -17,3 +17,8 @@ workflows:
           build_service: centos8build
           bintray_uploader: centos8bintray
           bintray-repo: custom
+      - docker-rpmbuild/build:
+          name: centos7build
+          build_service: centos7build
+          bintray_uploader: centos7bintray
+          bintray-repo: custom

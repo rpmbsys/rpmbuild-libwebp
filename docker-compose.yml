@@ -1,5 +1,13 @@
 version: "3.4"
 services:
+  centos7build:
+    volumes:
+      - rpms:/home/centos/rpmbuild/SRPMS
+      - rpm7:/home/centos/rpmbuild/RPMS
+    build:
+      context: .
+      args:
+        centos: $OS7
   centos8build:
     volumes:
       - rpms:/home/centos/rpmbuild/SRPMS
@@ -12,5 +20,7 @@ services:
 volumes:
   rpms:
     name: rpms
+  rpm7:
+    name: rpm7
   rpm8:
     name: rpm8
