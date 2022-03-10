@@ -4,7 +4,7 @@
 %define debug_package %{nil}
 
 Name:          libwebp
-Version:       1.2.0
+Version:       1.2.2
 Release:       1%{?dist}
 URL:           http://webmproject.org/
 Summary:       Library and tools for the WebP graphics format
@@ -71,14 +71,10 @@ Java bindings for libwebp.
 
 %build
 autoreconf -vif
-%ifarch aarch64
-export CFLAGS="%{optflags} -frename-registers"
-%endif
-# Neon disabled due to resulting CFLAGS conflict resulting in
-# inlining failed in call to always_inline '[...]': target specific option mismatch
+
 %configure --disable-static --enable-libwebpmux \
-           --enable-libwebpdemux --enable-libwebpdecoder \
-           --disable-neon
+           --enable-libwebpdemux --enable-libwebpdecoder
+
 %make_build V=1
 make -C examples vwebp
 
@@ -143,8 +139,19 @@ cp swig/*.jar swig/*.so %{buildroot}/%{_libdir}/%{name}-java/
 %doc libwebp_jni_example.java
 %{_libdir}/%{name}-java/
 
-
 %changelog
+* Thu Jan 20 2022 Sandro Mani <manisandro@gmail.com> - 1.2.2-1
+- Update to 1.2.2
+
+* Thu Jan 06 2022 Peter Robinson <pbrobinson@fedoraproject.org> - 1.2.1-3
+- Drop aarch64 CFLAGS FTB workaround
+
+* Sun Jan 02 2022 Dennis Gilmore <dennis@ausil.us> - 1.2.2-2
+- do not disable neon support
+
+* Sun Aug 15 2021 Sandro Mani <manisandro@gmail.com> - 1.2.1-1
+- Update to 1.2.1
+
 * Mon Feb 01 2021 Sandro Mani <manisandro@gmail.com> - 1.2.0-1
 - Update to 1.2.0
 

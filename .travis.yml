@@ -13,12 +13,12 @@ env:
     - ARTIFACTORY_URL=https://rpmb.jfrog.io
     - BINTRAY_REPO=custom
     - OS7=7.9.2009
+    - OS8=stream8
     - OS7TAG=7.9.2009
-    - OS8=8.3.2011
-    - OS8TAG=8.3.2011
+    - OS8TAG=stream8
   jobs:
     - BUILD=centos7build UPLOADER=centos7bintray
-    - BUILD=centos8build UPLOADER=centos8bintray
+    - BUILD=stream8build UPLOADER=stream8bintray REPO_PATH=centos/8-stream
 
 before_script:
   - docker-compose build --no-cache ${BUILD}
@@ -31,6 +31,6 @@ before_deploy:
 
 deploy:
   provider: script
-  script: docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm -e BINTRAY_USER=$BINTRAY_USER -e BINTRAY_API_KEY=$BINTRAY_API_KEY -e BINTRAY_REPO=$BINTRAY_REPO -e ARTIFACTORY_URL=$ARTIFACTORY_URL ${UPLOADER}
+  script: docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm -e BINTRAY_USER=$BINTRAY_USER -e BINTRAY_API_KEY=$BINTRAY_API_KEY -e BINTRAY_REPO=$BINTRAY_REPO -e ARTIFACTORY_URL=$ARTIFACTORY_URL -e REPO_PATH=$REPO_PATH ${UPLOADER}
   on:
     all_branches: true

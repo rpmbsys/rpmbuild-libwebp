@@ -1,4 +1,4 @@
-ARG centos=8.3.2011
+ARG centos=stream8
 FROM aursu/rpmbuild:${centos}-build
 
 USER root
