@@ -1,10 +1,11 @@
 %global _hardened_build 1
-
 %define _debugsource_template %{nil}
 %define debug_package %{nil}
 
+%bcond_with java
+
 Name:          libwebp
-Version:       1.2.2
+Version:       1.3.0
 Release:       1%{?dist}
 URL:           http://webmproject.org/
 Summary:       Library and tools for the WebP graphics format
@@ -12,17 +13,27 @@ Summary:       Library and tools for the WebP graphics format
 License:       BSD
 Source0:       http://downloads.webmproject.org/releases/webp/%{name}-%{version}.tar.gz
 Source1:       libwebp_jni_example.java
+# Fix build with freeglut
 Patch0:        libwebp-freeglut.patch
+# Add version suffix to mingw libraries
+Patch1:        libwebp-mingw-libsuffix.patch
+# Fix cmake module install location
+Patch2:        libwebp-cmakedir.patch
+# Kill rpath
+Patch3:        libwebp-rpath.patch
 
+BuildRequires: cmake
+BuildRequires: freeglut-devel
+BuildRequires: gcc
+BuildRequires: giflib-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
-BuildRequires: giflib-devel
 BuildRequires: libtiff-devel
+%if %{with java}
 BuildRequires: java-devel
 BuildRequires: jpackage-utils
 BuildRequires: swig
-BuildRequires: autoconf automake libtool
-BuildRequires: freeglut-devel
+%endif
 
 %description
 WebP is an image format that does lossy compression of digital
@@ -55,6 +66,7 @@ developers can use WebP to compress, archive and distribute digital
 images more efficiently.
 
 
+%if %{with java}
 %package java
 Summary:       Java bindings for libwebp, a library for the WebP format
 Requires:      %{name}%{?_isa} = %{version}-%{release}
@@ -63,22 +75,19 @@ Requires:      jpackage-utils
 
 %description java
 Java bindings for libwebp.
-
+%endif
 
 %prep
 %autosetup -p1
 
 
 %build
-autoreconf -vif
+# Native build
+%cmake
+%cmake_build
 
-%configure --disable-static --enable-libwebpmux \
-           --enable-libwebpdemux --enable-libwebpdecoder
-
-%make_build V=1
-make -C examples vwebp
-
-# swig generated Java bindings
+%if %{with java}
+# SWIG generated Java bindings
 cp %{SOURCE1} .
 cd swig
 rm -rf libwebp.jar libwebp_java_wrap.c
@@ -92,25 +101,54 @@ gcc %{__global_ldflags} %{optflags} -shared \
     -I/usr/lib/jvm/java/include \
     -I/usr/lib/jvm/java/include/linux \
     -I../src \
-    -L../src/.libs -lwebp libwebp_java_wrap.c \
+    -L../%{_vpath_builddir} -lwebp libwebp_java_wrap.c \
     -o libwebp_jni.so
 
 cd java
 javac com/google/webp/libwebp.java
 jar cvf ../libwebp.jar com/google/webp/*.class
+%endif
 
 
 %install
-%make_install
+# Native build
+%cmake_install
+
 find "%{buildroot}/%{_libdir}" -type f -name "*.la" -delete
 
-# swig generated Java bindings
+%if %{with java}
+# SWIG generated Java bindings
 mkdir -p %{buildroot}/%{_libdir}/%{name}-java
 cp swig/*.jar swig/*.so %{buildroot}/%{_libdir}/%{name}-java/
+%endif
 
 
-%ldconfig_scriptlets
+%check
+%ctest
 
+
+%files
+%doc README.md PATENTS NEWS AUTHORS
+%license COPYING
+%{_libdir}/%{name}.so.7*
+%{_libdir}/%{name}decoder.so.3*
+%{_libdir}/%{name}demux.so.2*
+%{_libdir}/%{name}mux.so.3*
+%{_libdir}/libsharpyuv.so.0*
+
+%files devel
+%{_libdir}/%{name}.so
+%{_libdir}/%{name}decoder.so
+%{_libdir}/%{name}demux.so
+%{_libdir}/%{name}mux.so
+%{_libdir}/libsharpyuv.so
+%{_includedir}/webp/
+%{_libdir}/pkgconfig/libwebp.pc
+%{_libdir}/pkgconfig/libwebpdecoder.pc
+%{_libdir}/pkgconfig/libwebpdemux.pc
+%{_libdir}/pkgconfig/libwebpmux.pc
+%{_libdir}/pkgconfig/libsharpyuv.pc
+%{_libdir}/cmake/WebP/
 
 %files tools
 %{_bindir}/cwebp
@@ -122,24 +160,22 @@ cp swig/*.jar swig/*.so %{buildroot}/%{_libdir}/%{name}-java/
 %{_bindir}/vwebp
 %{_mandir}/man*/*
 
-%files -n %{name}
-%doc README PATENTS NEWS AUTHORS
-%license COPYING
-%{_libdir}/%{name}.so.7*
-%{_libdir}/%{name}decoder.so.3*
-%{_libdir}/%{name}demux.so.2*
-%{_libdir}/%{name}mux.so.3*
-
-%files devel
-%{_libdir}/%{name}*.so
-%{_includedir}/*
-%{_libdir}/pkgconfig/*
-
+%if %{with java}
 %files java
 %doc libwebp_jni_example.java
 %{_libdir}/%{name}-java/
+%endif
 
 %changelog
+* Fri Jan 13 2023 Sandro Mani <manisandro@gmail.com> - 1.3.0-1
+- Update to 1.3.0
+
+* Thu Sep 22 2022 Sandro Mani <manisandro@gmail.com> - 1.2.4-2
+- Add libwebp_libsuffix.patch
+
+* Tue Jul 05 2022 Sandro Mani <manisandro@gmail.com> - 1.2.2-6
+- Limit -java subpackage to %%java_arches
+
 * Thu Jan 20 2022 Sandro Mani <manisandro@gmail.com> - 1.2.2-1
 - Update to 1.2.2
 
@@ -152,14 +188,35 @@ cp swig/*.jar swig/*.so %{buildroot}/%{_libdir}/%{name}-java/
 * Sun Aug 15 2021 Sandro Mani <manisandro@gmail.com> - 1.2.1-1
 - Update to 1.2.1
 
+* Thu Jul 22 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1.2.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
+
 * Mon Feb 01 2021 Sandro Mani <manisandro@gmail.com> - 1.2.0-1
 - Update to 1.2.0
+
+* Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1.1.0-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
+* Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.1.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
+* Sat Jul 11 2020 Jiri Vanek <jvanek@redhat.com> - 1.1.0-4
+- Rebuilt for JDK-11, see https://fedoraproject.org/wiki/Changes/Java11
 
 * Mon May 18 2020 Sandro Mani <manisandro@gmail.com> - 1.1.0-3
 - Don't manually and incorrectly install vwebp, Makefile already does it correctly (#1836640)
 
+* Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.1.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
 * Tue Jan 07 2020 Sandro Mani <manisandro@gmail.com> - 1.1.0-1
 - Update to 1.1.0
+
+* Tue Sep 17 2019 Gwyn Ciesla <gwync@protonmail.com> - 1.0.3-3
+- Rebuilt for new freeglut
+
+* Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.0.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
 * Mon Jul 15 2019 Sandro Mani <manisandro@gmail.com> - 1.0.3-1
 - Update to 1.0.3

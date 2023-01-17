@@ -6,29 +6,26 @@ env:
   BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}
   DOCKER_USER: ${{ secrets.DOCKER_USER }}
   DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+  BINTRAY_REPO: custom
   OS7: 7.9.2009
-  OS8: stream8
+  RL8: 8.7.20221112
   OS7TAG: 7.9.2009
-  OS8TAG: stream8
+  RL8TAG: 8.7.20221112
+  OS9: stream9-20221206.0
+  OS9TAG: stream9-20221206.0
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
-          - compose-file: docker-compose.yml
-            repo: custom
-            build: stream8build
-            uploader: stream8bintray
-            repo_path: centos/8-stream
-          - compose-file: docker-compose.yml
-            repo: custom
-            build: centos7build
-            uploader: centos7bintray
-            repo_path: ""
+          - build: rocky8build
+            uploader: rocky8bintray
+            repo_path: rocky/8
+          - build: stream9build
+            uploader: stream9bintray
+            repo_path: centos/9-stream
     env:
-      BUILD_COMPOSE_FILE: ${{ matrix.compose-file }}
-      BINTRAY_REPO: ${{ matrix.repo }}
       BUILD: ${{ matrix.build }}
       UPLOADER: ${{ matrix.uploader }}
       REPO_PATH: ${{ matrix.repo_path }}
@@ -36,7 +33,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - run: docker-compose -f $BUILD_COMPOSE_FILE build --no-cache $BUILD
-      - run: docker-compose -f $BUILD_COMPOSE_FILE up --exit-code-from $BUILD $BUILD
+      - run: docker-compose -f docker-compose.yml build --no-cache $BUILD
+      - run: docker-compose -f docker-compose.yml up --exit-code-from $BUILD $BUILD
       - run: docker-compose -f rpmbuild/docker-compose.bintray.yml pull $UPLOADER
       - run: docker-compose -f rpmbuild/docker-compose.bintray.yml run --rm -e BINTRAY_USER=$BINTRAY_USER -e BINTRAY_API_KEY=$BINTRAY_API_KEY -e BINTRAY_REPO=$BINTRAY_REPO -e ARTIFACTORY_URL=$ARTIFACTORY_URL -e REPO_PATH=$REPO_PATH $UPLOADER
