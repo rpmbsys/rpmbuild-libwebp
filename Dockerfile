@@ -3,6 +3,7 @@ FROM aursu/rpmbuild:${os}-build
 
 USER root
 RUN dnf -y install \
+        cmake \
         freeglut-devel \
         giflib-devel \
         java-devel \

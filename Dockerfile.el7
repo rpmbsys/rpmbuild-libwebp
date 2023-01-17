@@ -3,6 +3,7 @@ FROM aursu/rpmbuild:${centos}-build
 
 USER root
 RUN yum -y install \
+        cmake \
         freeglut-devel \
         giflib-devel \
         java-devel \
