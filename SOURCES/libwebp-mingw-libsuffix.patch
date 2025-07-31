@@ -1,7 +1,7 @@
-diff -rupN --no-dereference libwebp-1.3.0/CMakeLists.txt libwebp-1.3.0-new/CMakeLists.txt
---- libwebp-1.3.0/CMakeLists.txt	2023-01-13 13:06:13.583139412 +0100
-+++ libwebp-1.3.0-new/CMakeLists.txt	2023-01-13 13:06:13.588139447 +0100
-@@ -275,6 +275,9 @@ macro(set_version FILE TARGET_NAME NAME_
+diff -rupN --no-dereference libwebp-1.5.0/CMakeLists.txt libwebp-1.5.0-new/CMakeLists.txt
+--- libwebp-1.5.0/CMakeLists.txt	2024-12-21 00:47:47.688835007 +0100
++++ libwebp-1.5.0-new/CMakeLists.txt	2024-12-21 00:47:47.692835012 +0100
+@@ -302,6 +302,9 @@ macro(set_version FILE TARGET_NAME NAME_
                   MACHO_CURRENT_VERSION
                   ${LIBWEBP_MACHO_COMPATIBILITY_VERSION}.${LT_REVISION})
    endif()

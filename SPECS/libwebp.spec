@@ -5,12 +5,12 @@
 %bcond_with java
 
 Name:          libwebp
-Version:       1.3.0
-Release:       1%{?dist}
+Version:       1.6.0
+Release:       2%{?dist}
 URL:           http://webmproject.org/
 Summary:       Library and tools for the WebP graphics format
 # Additional IPR is licensed as well. See PATENTS file for details
-License:       BSD
+License:       Apache-2.0 AND LicenseRef-scancode-google-patent-license-webm AND BSD-3-Clause AND FSFULLRWD
 Source0:       http://downloads.webmproject.org/releases/webp/%{name}-%{version}.tar.gz
 Source1:       libwebp_jni_example.java
 # Fix build with freeglut
@@ -45,6 +45,7 @@ images more efficiently.
 
 %package tools
 Summary:       The WebP command line tools
+Requires:      %{name}%{?_isa} = %{version}-%{release}
 
 %description tools
 WebP is an image format that does lossy compression of digital
@@ -167,14 +168,86 @@ cp swig/*.jar swig/*.so %{buildroot}/%{_libdir}/%{name}-java/
 %endif
 
 %changelog
+* Thu Jul 24 2025 Fedora Release Engineering <releng@fedoraproject.org> - 1.6.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_43_Mass_Rebuild
+
+* Thu Jul 10 2025 Sandro Mani <manisandro@gmail.com> - 1.6.0-1
+- Update to 1.6.0
+
+* Fri Jan 17 2025 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_42_Mass_Rebuild
+
+* Fri Dec 20 2024 Sandro Mani <manisandro@gmail.com> - 1.5.0-1
+- Update to 1.5.0
+
+* Thu Aug 8 2024 Martin Stransky <stransky@redhat.com> - 1.4.0-4
+- Added libwebp explicit dependency to libwebp-tools package
+
+* Thu Aug 1 2024 Martin Stransky <stransky@redhat.com> - 1.4.0-3
+- Disable libwebp-java on RHEL
+
+* Thu Jul 18 2024 Fedora Release Engineering <releng@fedoraproject.org> - 1.4.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
+
+* Sun Apr 14 2024 Sandro Mani <manisandro@gmail.com> - 1.4.0-1
+- Update to 1.4.0
+
+* Wed Feb 14 2024 Martin Stransky <stransky@redhat.com> - 1.3.2-5
+- Migrated to SPDX license
+
+* Thu Jan 25 2024 Fedora Release Engineering <releng@fedoraproject.org> - 1.3.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
+
+* Sun Jan 21 2024 Fedora Release Engineering <releng@fedoraproject.org> - 1.3.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
+
+* Thu Sep 28 2023 Sandro Mani <manisandro@gmail.com> - 1.3.2-2
+- Backport upstream fix for CVE-2023-5129
+
+* Mon Sep 18 2023 Sandro Mani <manisandro@gmail.com> - 1.3.2-1
+- Update to 1.3.2
+
+* Wed Sep 13 2023 Boudhayan Bhattacharya <bbhtt.zn0i8@slmail.me> - 1.3.1-3
+- Add patch for CVE-2023-4863 ref rhbz#2238543
+
+* Thu Jul 20 2023 Fedora Release Engineering <releng@fedoraproject.org> - 1.3.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_39_Mass_Rebuild
+
+* Fri Jun 30 2023 Sandro Mani <manisandro@gmail.com> - 1.3.1-1
+- Update to 1.3.1
+
+* Thu Jan 19 2023 Fedora Release Engineering <releng@fedoraproject.org> - 1.3.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_38_Mass_Rebuild
+
 * Fri Jan 13 2023 Sandro Mani <manisandro@gmail.com> - 1.3.0-1
 - Update to 1.3.0
 
 * Thu Sep 22 2022 Sandro Mani <manisandro@gmail.com> - 1.2.4-2
 - Add libwebp_libsuffix.patch
 
+* Sun Aug 07 2022 Sandro Mani <manisandro@gmail.com> - 1.2.4-1
+- Update to 1.2.4
+
+* Thu Jul 21 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1.2.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
+
+* Wed Jul 20 2022 Sandro Mani <manisandro@gmail.com> - 1.2.3-1
+- Update to 1.2.3
+
 * Tue Jul 05 2022 Sandro Mani <manisandro@gmail.com> - 1.2.2-6
 - Limit -java subpackage to %%java_arches
+
+* Fri Mar 25 2022 Sandro Mani <manisandro@gmail.com> - 1.2.2-5
+- Rebuild with mingw-gcc-12
+
+* Thu Feb 24 2022 Sandro Mani <manisandro@gmail.com> - 1.2.2-4
+- Make mingw subpackages noarch
+
+* Sat Feb 19 2022 Sandro Mani <manisandro@gmail.com> - 1.2.2-3
+- Add mingw subpackage
+
+* Sat Feb 05 2022 Jiri Vanek <jvanek@redhat.com> - 1.2.2-2
+- Rebuilt for java-17-openjdk as system jdk
 
 * Thu Jan 20 2022 Sandro Mani <manisandro@gmail.com> - 1.2.2-1
 - Update to 1.2.2

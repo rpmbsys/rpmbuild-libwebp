@@ -1,8 +1,8 @@
-ARG os=8.7.20221112
+ARG os=10.0.20250606
 FROM aursu/rpmbuild:${os}-build
 
 USER root
-RUN dnf -y --enablerepo=bintray-custom install \
+RUN dnf -y install \
         cmake \
         freeglut-devel \
         giflib-devel \

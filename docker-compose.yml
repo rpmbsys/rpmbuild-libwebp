@@ -1,32 +1,21 @@
-version: "3"
 services:
-  centos7build:
+  rocky9build:
     volumes:
-      - rpm7:/home/centos/rpmbuild/RPMS
-    build:
-      context: .
-      dockerfile: Dockerfile.el7
-      args:
-        centos: $OS7
-  rocky8build:
-    volumes:
-      - rpm8rocky:/home/centos/rpmbuild/RPMS
+      - rpm9rocky:/home/centos/rpmbuild/RPMS
     build:
       context: .
       args:
-        os: $RL8
-  stream9build:
+        os: $RL9
+  rocky10build:
     volumes:
-      - rpm9stream:/home/centos/rpmbuild/RPMS
+      - rpm10rocky:/home/centos/rpmbuild/RPMS
     build:
       context: .
       args:
-        os: $OS9
+        os: $RL10
 
 volumes:
-  rpm7:
-    name: rpm7
-  rpm8rocky:
-    name: rpm8rocky
-  rpm9stream:
-    name: rpm9stream
+  rpm9rocky:
+    name: rpm9rocky
+  rpm10rocky:
+    name: rpm10rocky
